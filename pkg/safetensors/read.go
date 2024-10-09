@@ -2,10 +2,13 @@ package safetensors
 
 import (
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
+
+	"go-diff/pkg/tensor"
 )
 
 // Read - Reading safetensors file
@@ -38,7 +41,22 @@ func Read(filename string) (err error) {
 		return
 	}
 
-	spew.Dump(string(header))
+	var tensorStorages = tensor.Storages{}
+
+	err = json.Unmarshal(header, &tensorStorages)
+	if err != nil {
+		err = fmt.Errorf("json.Unmarshal tensorStorages: %w", err)
+		return
+	}
+
+	println()
+	println()
+	println()
+	println()
+	println()
+	spew.Dump(tensorStorages.Data[0])
+	spew.Dump(tensorStorages.Data[10])
+	spew.Dump(tensorStorages.Data[20])
 
 	return
 }
